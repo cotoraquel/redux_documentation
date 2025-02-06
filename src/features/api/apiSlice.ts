@@ -1,9 +1,10 @@
 // Import the RTK Query methods from the React-specific entry point
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
+
 // Use the `Post` type we've already defined in `postsSlice`,
 // and then re-export it for ease of use
-import type { Post } from '@/features/posts/postsSlice'
+import type { Post, NewPost } from '@/features/posts/postsSlice'
 export type { Post }
 
 // Define our single API slice object
@@ -23,8 +24,19 @@ export const apiSlice = createApi({
     getPost: builder.query<Post, string>({
         query: postId => `/posts/${postId}`
       })
-  })
-})
+  }),
+    addNewPost: builder.mutation<Post, NewPost>({
+        query: initialPost => ({
+        // The HTTP URL will be '/fakeApi/posts'
+        url: '/posts',
+        // This is an HTTP POST request, sending an update
+        method: 'POST',
+        // Include the entire post object as the body of the request
+        body: initialPost
+        })
+    })
+    })
+    
 
 // Export the auto-generated hook for the `getPosts` query endpoint
-export const { useGetPostsQuery, useGetPostQuery } = apiSlice
+export const { useGetPostsQuery, useGetPostQuery, useAddNewPostMutation } = apiSlice
