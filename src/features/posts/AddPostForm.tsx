@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { useAppDispatch, useAppSelector } from '@/app/hooks'
+
 import { selectCurrentUsername } from '@/features/auth/authSlice'
 
 import { postAdded } from './postsSlice'
@@ -19,7 +20,7 @@ export const AddPostForm = () => {
   const dispatch = useAppDispatch()
 
   const userId = useAppSelector(selectCurrentUsername)!
-
+  
   const handleSubmit = (e: React.FormEvent<AddPostFormElements>) => {
     // Prevent server submission
     e.preventDefault()

@@ -16,20 +16,12 @@ import { ReactionButtons } from './ReactionButtons'
 export const SinglePostPage = () => {
   const { postId } = useParams()
 
-  const post = useAppSelector((state) => selectPostById(state, postId!))
   const currentUsername = useAppSelector(selectCurrentUsername)!
   const { data: post, isFetching, isSuccess } = useGetPostQuery(postId!)
 
+  let content: React.ReactNode
 
-  if (!post) {
-    return (
-      <section>
-        <h2>Post not found!</h2>
-      </section>
-    )
-  }
-
-  const canEdit = currentUsername === post.user
+  const canEdit = currentUsername === post?.user
 
   if (isFetching) {
     content = <Spinner text="Loading..." />
