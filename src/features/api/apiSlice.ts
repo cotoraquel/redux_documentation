@@ -19,7 +19,8 @@ export const apiSlice = createApi({
     // The return value is a `Post[]` array, and it takes no arguments.
     getPosts: builder.query<Post[], void>({
       // The URL for the request is '/fakeApi/posts'
-      query: () => '/posts'
+      query: () => '/posts',
+      providesTags: ['Post']
     }),
     getPost: builder.query<Post, string>({
         query: postId => `/posts/${postId}`
@@ -33,7 +34,8 @@ export const apiSlice = createApi({
         method: 'POST',
         // Include the entire post object as the body of the request
         body: initialPost
-        })
+        }),
+        invalidatesTags: ['Post']
     })
     })
     
