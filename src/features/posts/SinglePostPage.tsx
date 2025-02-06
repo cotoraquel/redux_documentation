@@ -1,8 +1,12 @@
 import { Link, useParams } from 'react-router-dom'
 
 import { useAppSelector } from '@/app/hooks'
+
+import { Spinner } from '@/components/Spinner'
 import { TimeAgo } from '@/components/TimeAgo'
 
+
+import { useGetPostQuery } from '@/features/api/apiSlice'
 import { selectCurrentUsername } from '@/features/auth/authSlice'
 
 import { PostAuthor } from './PostAuthor'
@@ -14,6 +18,8 @@ export const SinglePostPage = () => {
 
   const post = useAppSelector((state) => selectPostById(state, postId!))
   const currentUsername = useAppSelector(selectCurrentUsername)!
+  const { data: post, isFetching, isSuccess } = useGetPostQuery(postId!)
+
 
   if (!post) {
     return (
@@ -25,8 +31,10 @@ export const SinglePostPage = () => {
 
   const canEdit = currentUsername === post.user
 
-  return (
-    <section>
+  if (isFetching) {
+    content = <Spinner text="Loading..." />
+  } else if (isSuccess) {
+    content = (
       <article className="post">
         <h2>{post.title}</h2>
         <div>
@@ -41,6 +49,7 @@ export const SinglePostPage = () => {
           </Link>
         )}
       </article>
-    </section>
-  )
+    )
+}
+return <section>{content}</section>
 }
