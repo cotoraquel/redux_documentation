@@ -84,7 +84,7 @@ const postsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(logout.fulfilled, (state) => {
+      .addCase(logout, (state) => {
         // Clear out the list of posts whenever the user logs out
         return initialState
       })
