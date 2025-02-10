@@ -21,9 +21,9 @@ export const LoginPage = () => {
   const handleSubmit = async (e: React.FormEvent<LoginPageFormElements>) => {
     e.preventDefault()
 
-    const username = e.currentTarget.elements.username.value
-    await dispatch(login(username))
-    navigate('/posts')
+    const username = e?.currentTarget?.elements?.username?.value;
+    await dispatch(login(username));
+    navigate('/posts');
   }
 
   const usersOptions = users.map((user) => (
