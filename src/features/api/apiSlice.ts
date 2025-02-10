@@ -39,8 +39,23 @@ export const apiSlice = createApi({
       }),
       getUsers: builder.query<User[], void>({
         query: () => '/users'
-      })
+      }),
+      addReaction: builder.mutation<
+      Post,
+      { postId: string; reaction: ReactionName }
+    >({
+      query: ({ postId, reaction }) => ({
+        url: `posts/${postId}/reactions`,
+        method: 'POST',
+        // In a real app, we'd probably need to base this on user ID somehow
+        // so that a user can't do the same reaction more than once
+        body: { reaction }
+      }),
+      invalidatesTags: (result, error, arg) => [
+        { type: 'Post', id: arg.postId }
+      ]
+    })
     })
   })
 
-export const { useGetPostsQuery, useGetPostQuery, useGetUsersQuery, useAddNewPostMutation, useEditPostMutation } = apiSlice
+export const { useGetPostsQuery, useGetPostQuery, useGetUsersQuery, useAddNewPostMutation, useEditPostMutation, useAddReactionMutation } = apiSlice
