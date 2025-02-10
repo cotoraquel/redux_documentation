@@ -1,39 +1,37 @@
 import { Link, useParams } from 'react-router-dom'
-
 import { useAppSelector } from '@/app/hooks'
+import { Spinner } from '@/components/Spinner'
 import { TimeAgo } from '@/components/TimeAgo'
-
+import { useGetPostQuery } from '@/features/api/apiSlice'
 import { selectCurrentUsername } from '@/features/auth/authSlice'
-
 import { PostAuthor } from './PostAuthor'
-import { selectPostById } from './postsSlice'
 import { ReactionButtons } from './ReactionButtons'
 
 export const SinglePostPage = () => {
   const { postId } = useParams()
 
-  const post = useAppSelector((state) => selectPostById(state, postId!))
-  const currentUsername = useAppSelector(selectCurrentUsername)!
-
-  if (!post) {
-    return (
-      <section>
-        <h2>Post not found!</h2>
-      </section>
-    )
+  if (!postId) {
+    return <section><h2>Invalid Post ID</h2></section>
   }
 
-  const canEdit = currentUsername === post.user
+  const currentUsername = useAppSelector(selectCurrentUsername)!
+  const { data: post, isFetching, isSuccess } = useGetPostQuery(postId)
 
-  return (
-    <section>
+  let content: React.ReactNode
+
+  if (isFetching) {
+    content = <Spinner text="Loading..." />
+  } else if (isSuccess && post) {
+    const canEdit = currentUsername === post.user
+
+    content = (
       <article className="post">
         <h2>{post.title}</h2>
         <div>
           <PostAuthor userId={post.user} />
           <TimeAgo timestamp={post.date} />
         </div>
-        <p className="post-content">{post.content}</p>
+        <p className="post-content">{post.content ?? "No content available"}</p>
         <ReactionButtons post={post} />
         {canEdit && (
           <Link to={`/editPost/${post.id}`} className="button">
@@ -41,6 +39,10 @@ export const SinglePostPage = () => {
           </Link>
         )}
       </article>
-    </section>
-  )
+    )
+  } else {
+    content = <h2>Post not found</h2>
+  }
+
+  return <section>{content}</section>
 }

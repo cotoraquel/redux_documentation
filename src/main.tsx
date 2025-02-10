@@ -5,7 +5,11 @@ import { Provider } from 'react-redux'
 import App from './App'
 import { store } from './app/store'
 
+
+import { apiSliceWithUsers } from './features/users/usersSlice'
 import { worker } from './api/server'
+
+import { apiSlice } from './features/api/apiSlice'
 
 import './primitiveui.css'
 import './index.css'
@@ -14,6 +18,8 @@ import './index.css'
 async function start() {
   // Start our mock API server
   await worker.start({ onUnhandledRequest: 'bypass' })
+
+  store.dispatch(apiSlice.endpoints.getUsers.initiate())
 
   const root = createRoot(document.getElementById('root')!)
 
@@ -25,5 +31,7 @@ async function start() {
     </React.StrictMode>
   )
 }  
+
+
 
 start()

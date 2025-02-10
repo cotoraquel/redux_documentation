@@ -1,5 +1,4 @@
 import { useAppSelector } from '@/app/hooks'
-
 import { selectUserById } from '@/features/users/usersSlice'
 
 interface PostAuthorProps {
